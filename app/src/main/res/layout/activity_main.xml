@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:padding="15dp"
+    tools:context=".activity.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_image_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="测试ImagePicker" />
+
+        <Button
+            android:id="@+id/btn_js_bridge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="测试JSBridge" />
+
+        <cn.iyuxuan.library.roundImage.RoundedImageView
+            android:id="@+id/riv"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@mipmap/ic_launcher"
+            android:text="测试roundImageViw"
+            app:riv_border_color="#f00"
+            app:riv_border_width="2dp"
+            app:riv_oval="true" />
+
+        <Button
+            android:id="@+id/btn_ufile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="UFile Demo" />
+
+        <Button
+            android:id="@+id/btn_load_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LoadGallery" />
+
+    </LinearLayout>
+</ScrollView>

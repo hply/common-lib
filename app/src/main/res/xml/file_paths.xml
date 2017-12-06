@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <root-path
+        name="lib"
+        path="" />
+    <files-path
+        name="common_images"
+        path="images/" />
+
+    <external-path
+        name="common_root"
+        path="/" />
+</paths>
