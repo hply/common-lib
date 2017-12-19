@@ -15,10 +15,10 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/btn_image_picker"
+            android:id="@+id/btn_dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="测试ImagePicker" />
+            android:text="DialogFragment" />
 
         <Button
             android:id="@+id/btn_js_bridge"

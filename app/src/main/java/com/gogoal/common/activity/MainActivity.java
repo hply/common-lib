@@ -10,17 +10,19 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.gogoal.bean.BottomGridData;
+import com.gogoal.common.OnItemClickListener;
 import com.gogoal.common.R;
 import com.gogoal.common.base.BaseActivity;
 import com.gogoal.common.common.IPermissionListner;
-import com.gogoal.common.common.ImageTakeUtils;
 import com.gogoal.common.common.UFileUpload;
+import com.gogoal.dialog.BottomGridDialog;
 import com.socks.library.KLog;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
-import cn.iyuxuan.library.imagepicker.ITakePhoto;
 import cn.iyuxuan.library.roundImage.RoundedImageView;
 
 public class MainActivity extends BaseActivity {
@@ -45,6 +47,26 @@ public class MainActivity extends BaseActivity {
                 Intent intent = new Intent(view.getContext(), JSBridgeActivity.class);
                 intent.putExtra("web_url", "http://192.168.152.32:9000/#/meeting/detail");
                 startActivity(intent);
+            }
+        });
+
+        final ArrayList<BottomGridData> dataList = new ArrayList<>();
+        dataList.add(new BottomGridData("微信", R.mipmap.default_image));
+        dataList.add(new BottomGridData("支付宝", R.mipmap.ic_launcher));
+        dataList.add(new BottomGridData("QQ", R.mipmap.default_image));
+        dataList.add(new BottomGridData("微博", R.mipmap.ic_launcher));
+        dataList.add(new BottomGridData("易信", R.mipmap.default_image));
+        dataList.add(new BottomGridData("facebook", R.mipmap.ic_launcher));
+
+        findViewById(R.id.btn_dialog).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BottomGridDialog.newInstance(4, dataList, new OnItemClickListener<BottomGridData>() {
+                    @Override
+                    public void onItemClick(View itemView, BottomGridData itemData, int position) {
+                        Toast.makeText(mContext, "pos="+position+"::"+itemData.getItemText(), Toast.LENGTH_SHORT).show();
+                    }
+                }).show(getSupportFragmentManager());
             }
         });
 
@@ -93,17 +115,6 @@ public class MainActivity extends BaseActivity {
                 findViewById(R.id.btn_load_gallery).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ImageTakeUtils.getInstance().takePhoto(v.getContext(), 9, false, new ITakePhoto() {
-                            @Override
-                            public void success(List<String> uriPaths, boolean isOriginalPic) {
-                                KLog.e(uriPaths);
-                            }
-
-                            @Override
-                            public void error() {
-                                KLog.e("出错了！");
-                            }
-                        });
                     }
                 });
             }
