@@ -2,7 +2,7 @@ package com.gogoal.base;
 
 /**
  * @author wangjd on 2017/12/13 10:24.
- * @description :${annotated}.
+ * @description :Json解析引擎
  */
 public interface JsonEngine {
 

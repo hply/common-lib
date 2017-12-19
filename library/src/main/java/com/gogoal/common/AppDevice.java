@@ -146,23 +146,6 @@ public class AppDevice {
         return false;
     }
 
-
-    public static int getDefaultActionBarSize(Context mContext) {
-        TypedValue typedValue = new TypedValue();
-        mContext.getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValue, true);
-        int[] attribute = new int[]{android.R.attr.actionBarSize};
-        TypedArray array = mContext.obtainStyledAttributes(typedValue.resourceId, attribute);
-        int titleHeight = array.getDimensionPixelSize(0 /* index */, -1 /* default size */);
-        array.recycle();
-        return titleHeight;
-    }
-
-    public static int getStatusBarHeight(Context context) {
-        // 获得状态栏高度
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        return context.getResources().getDimensionPixelSize(resourceId);
-    }
-
     /**
      * 检测网络是否可用
      */
@@ -173,15 +156,6 @@ public class AppDevice {
         }
         NetworkInfo ni = cm.getActiveNetworkInfo();
         return ni != null && ni.isConnectedOrConnecting();
-    }
-
-    /**
-     * 跳转到应用详情设置页
-     */
-    public static void go2AppDetail(Context context) {
-        Uri packageURI = Uri.parse("package:" + context.getPackageName());
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
-        context.startActivity(intent);
     }
 
     /**
@@ -588,45 +562,6 @@ public class AppDevice {
     }
 
     /**
-     * 获取程序的版本号
-     *
-     * @param context ;
-     * @return ;
-     */
-    public static int getAppVersionCode(Context context) {
-        //包管理操作管理类
-        PackageManager pm = context.getPackageManager();
-        try {
-            PackageInfo packinfo = pm.getPackageInfo(context.getPackageName(), 0);
-            return packinfo.versionCode;
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-
-        }
-        return 0;
-    }
-
-    /**
-     * 获取当前程序的版本名
-     *
-     * @param context ;
-     * @return ;
-     */
-    public static String getAppVersionName(Context context) {
-        //包管理操作管理类
-        PackageManager pm = context.getPackageManager();
-        try {
-            PackageInfo packinfo = pm.getPackageInfo(context.getPackageName(), 0);
-            return packinfo.versionName;
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-
-        }
-        return context.getPackageName();
-    }
-
-
-    /**
      * 获取程序的名字
      *
      * @param context  ;
@@ -665,34 +600,6 @@ public class AppDevice {
 
         }
         return packname;
-    }
-
-    /**
-     * 安装apk
-     */
-    public static void installAPK(Context context, File apkFile) {
-        if (apkFile == null || !apkFile.exists()) {
-            return;
-        }
-        Intent intent = new Intent();
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(apkFile),
-                "application/vnd.android.package-archive");
-        context.startActivity(intent);
-
-    }
-
-    /**
-     * 安装意图
-     */
-    public static Intent getInstallApkIntent(File file) {
-        Intent intent = new Intent();
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file),
-                "application/vnd.android.package-archive");
-        return intent;
     }
 
     /**
@@ -938,22 +845,6 @@ public class AppDevice {
     }
 
     /**
-     * 调用系统安装了的应用分享
-     *
-     * @param context
-     * @param title
-     * @param url
-     */
-    public static void showSystemShareOption(Activity context,
-                                             final String title, final String url) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_SUBJECT, "分享：" + title);
-        intent.putExtra(Intent.EXTRA_TEXT, title + " " + url);
-        context.startActivity(Intent.createChooser(intent, "选择分享"));
-    }
-
-    /**
      * 获取当前网络类型
      *
      * @return 0：没有网络 1：WIFI网络 2：WAP网络 3：NET网络
@@ -1000,28 +891,28 @@ public class AppDevice {
         editText.setFilters(new InputFilter[]{filter});
     }
 
-    public static int getAudioDurition(Context context, String path) {
-
-        MediaPlayer mediaPlayer = new MediaPlayer();
-
-        try {
-            mediaPlayer.setDataSource(context, Uri.fromFile(new File(path)));
-
-            mediaPlayer.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
-
-            mediaPlayer.prepare();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        int duration = mediaPlayer.getDuration();
-
-        mediaPlayer.release();
-        mediaPlayer = null;
-
-        return duration;
-    }
+//    public static int getAudioDurition(Context context, String path) {
+//
+//        MediaPlayer mediaPlayer = new MediaPlayer();
+//
+//        try {
+//            mediaPlayer.setDataSource(context, Uri.fromFile(new File(path)));
+//
+//            mediaPlayer.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
+//
+//            mediaPlayer.prepare();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        int duration = mediaPlayer.getDuration();
+//
+//        mediaPlayer.release();
+//        mediaPlayer = null;
+//
+//        return duration;
+//    }
 
     //去应用市场评价，下载
     public static void gotoMarket(Context context, String pck) {
@@ -1035,30 +926,5 @@ public class AppDevice {
             e.printStackTrace();
         }
     }
-
-//    public static void setTabLayoutWidth(TabLayout t, int dpMargin) {
-//        try {
-//            Class<?> tablayout = t.getClass();
-//            Field tabStrip = tablayout.getDeclaredField("mTabStrip");
-//            tabStrip.setAccessible(true);
-//            LinearLayout layoutTab = (LinearLayout) tabStrip.get(t);
-//            for (int i = 0; i < layoutTab.getChildCount(); i++) {
-//                View child = layoutTab.getChildAt(i);
-//                child.setPadding(0, 0, 0, 0);
-//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
-//
-//                params.setMargins(
-//                        AppDevice.dp2px(dpMargin),
-//                        0,
-//                        AppDevice.dp2px(dpMargin),
-//                        0);
-//
-//                child.setLayoutParams(params);
-//                child.invalidate();
-//            }
-//        } catch (Exception e) {
-//            e.getMessage();
-//        }
-//    }
 
 }

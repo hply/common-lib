@@ -34,7 +34,7 @@
             android:text="测试roundImageViw"
             app:riv_border_color="#f00"
             app:riv_border_width="2dp"
-            app:riv_oval="true" />
+            app:riv_oval="true"/>
 
         <Button
             android:id="@+id/btn_ufile"
