@@ -73,8 +73,12 @@ public class MainActivity extends BaseActivity {
         requestRuntimePermission(new IPermissionListner() {
             @Override
             public void onUserAuthorize() {
-                final File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
-                        File.separator + "mishop" + File.separator + "mishop_export_1512461696133.jpg");
+                File pictureFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                if (pictureFile==null || !pictureFile.exists()){
+                    return;
+                }
+
+                final File file = new File(pictureFile.getAbsolutePath() + File.separator + "qm_2.jpg");
 
                 RequestOptions options = RequestOptions.noTransformation()
                         .circleCrop()

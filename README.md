@@ -1,11 +1,15 @@
-本类库是关于朝阳永续android项目中使用到的开源项目或者常用项目的二次封装工具类的整合
+本类库是关于朝阳永续android项目中使用到的开源项目或者常用项目的二次封装工具类的整合（王结东）
+
     目前beta版本分为四大模块————
+
     1.jsbridge:由曹郁剑王结东黄舜2016年基于https://github.com/lzyzsd/JsBridge的JsBridge修改
                   具体使用实例见智投项目和黑版GoGoal App
+
     2.roundImage：圆形或者圆角矩形的控件库，和Glide完美兼容
                     支持圆形riv_oval=true
                     支持圆角矩形riv_oval=false,riv_corner_radius可以设置角度
                     支持边框riv_border_width="2dp"宽度设置和riv_border_color颜色设置
+
     3.UFile:UCloud旗下对象云存储，主要是sdk部分
             key的初始化和上传工具类不在本类库中，详情使用查看智投项目和黑版GoGoal App中的UFileUpload
 
@@ -15,8 +19,8 @@
                             但是切记：要在清单配置文件中申明AndroidManifest.xml
                             JsonEngine：json解析的引擎，根据具体项目继承实现两个方法即可，用途不大
                             AppManager：Activity栈的管理类，在项目的BaseActivity的onCreat中添加，
-                                       onDestry中移除即可
-                   3) dialog:基于DialogFragment的简易封装，能轻松实现任何弹窗，
+                                        onDestry中移除即可
+                   3) dialog:基于DialogFragment的简易封装，能轻松实现任何弹窗，支持黑白两个主题
                              顶部的弹窗继承BaseTopDialog、中间的BaseCentDailog；
                              底部的继承BaseBottomDialog，本质Fragment可以和组件通信发消息
                              注意，无论使用哪一个，记得show；
