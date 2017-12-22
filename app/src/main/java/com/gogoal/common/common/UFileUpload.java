@@ -87,11 +87,6 @@ public class UFileUpload {
     }
 
     public void upload(final File file, Type type, final UploadListener listener) {
-
-        String httpMethod = "PUT";
-
-        String contentMD5 = UFileUtils.getFileMD5(file);
-
         String contentType = null;
         switch (type) {
             case IMAGE:
@@ -109,6 +104,15 @@ public class UFileUpload {
             default:
                 break;
         }
+
+        upload(file, contentType, listener);
+
+    }
+    public void upload(final File file, String contentType, final UploadListener listener) {
+
+        String httpMethod = "PUT";
+
+        String contentMD5 = UFileUtils.getFileMD5(file);
 
         String date = "";
 

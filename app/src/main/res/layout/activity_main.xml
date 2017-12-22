@@ -34,7 +34,7 @@
             android:text="测试roundImageViw"
             app:riv_border_color="#f00"
             app:riv_border_width="2dp"
-            app:riv_oval="true"/>
+            app:riv_oval="true" />
 
         <Button
             android:id="@+id/btn_ufile"
@@ -47,6 +47,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="LoadGallery" />
+
+        <Button
+            android:id="@+id/btn_apk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="apk上传"/>
 
     </LinearLayout>
 </ScrollView>

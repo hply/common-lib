@@ -1,9 +1,11 @@
 package com.gogoal.common.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.view.View;
 import android.widget.Toast;
@@ -14,6 +16,7 @@ import com.gogoal.bean.BottomGridData;
 import com.gogoal.common.OnItemClickListener;
 import com.gogoal.common.R;
 import com.gogoal.common.base.BaseActivity;
+import com.gogoal.common.common.FileUtils;
 import com.gogoal.common.common.IPermissionListner;
 import com.gogoal.common.common.UFileUpload;
 import com.gogoal.dialog.BottomGridDialog;
@@ -28,6 +31,7 @@ import cn.iyuxuan.library.roundImage.RoundedImageView;
 public class MainActivity extends BaseActivity {
 
     private RoundedImageView roundView;
+    private String path;
 
     @Override
     public int bindLayout() {
@@ -67,6 +71,16 @@ public class MainActivity extends BaseActivity {
                         Toast.makeText(mContext, "pos="+position+"::"+itemData.getItemText(), Toast.LENGTH_SHORT).show();
                     }
                 }).show(getSupportFragmentManager());
+            }
+        });
+
+        findViewById(R.id.btn_apk).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("application/vnd.android.package-archive");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                startActivityForResult(intent, 10086);
             }
         });
 
@@ -129,6 +143,46 @@ public class MainActivity extends BaseActivity {
             }
         }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getData();
+            if ("file".equalsIgnoreCase(uri.getScheme())) {//使用第三方应用打开
+                path = uri.getPath();
+//                Toast.makeText(this, path + "11111", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {//4.4以后
+                path = FileUtils.getPath(this, uri);
+                Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
+                loadApk(path);
+            } else {//4.4以下下系统调用方法
+                path = FileUtils.getRealPathFromURI(this,uri);
+                Toast.makeText(MainActivity.this, path + " ", Toast.LENGTH_SHORT).show();
+                loadApk(path);
+            }
+        }
+    }
+
+    private void loadApk(String path){
+        UFileUpload.getInstance().upload(new File(path), FileUtils.getContentType("apk"), new UFileUpload.UploadListener() {
+            @Override
+            public void onUploading(int progress) {
+                KLog.e(progress);
+            }
+
+            @Override
+            public void onSuccess(String onlineUri) {
+                KLog.e(onlineUri);
+            }
+
+            @Override
+            public void onFailed() {
+                KLog.e("上传失败了~");
+            }
+        });
     }
 
 }
