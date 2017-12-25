@@ -16,6 +16,7 @@ import com.gogoal.bean.BottomGridData;
 import com.gogoal.common.OnItemClickListener;
 import com.gogoal.common.R;
 import com.gogoal.common.base.BaseActivity;
+import com.gogoal.common.common.ContentType;
 import com.gogoal.common.common.FileUtils;
 import com.gogoal.common.common.IPermissionListner;
 import com.gogoal.common.common.UFileUpload;
@@ -68,7 +69,7 @@ public class MainActivity extends BaseActivity {
                 BottomGridDialog.newInstance(4, dataList, new OnItemClickListener<BottomGridData>() {
                     @Override
                     public void onItemClick(View itemView, BottomGridData itemData, int position) {
-                        Toast.makeText(mContext, "pos="+position+"::"+itemData.getItemText(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "pos=" + position + "::" + itemData.getItemText(), Toast.LENGTH_SHORT).show();
                     }
                 }).show(getSupportFragmentManager());
             }
@@ -78,9 +79,19 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("application/vnd.android.package-archive");
+                intent.setType(ContentType.APK);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 startActivityForResult(intent, 10086);
+            }
+        });
+
+        findViewById(R.id.btn_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType(ContentType.PNG);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                startActivityForResult(intent, 10010);
             }
         });
 
@@ -88,7 +99,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onUserAuthorize() {
                 File pictureFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                if (pictureFile==null || !pictureFile.exists()){
+                if (pictureFile == null || !pictureFile.exists()) {
                     return;
                 }
 
@@ -149,7 +160,11 @@ public class MainActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             Uri uri = data.getData();
-            if ("file".equalsIgnoreCase(uri.getScheme())) {//使用第三方应用打开
+            if (uri == null) {
+                return;
+            }
+            //使用第三方应用打开
+            if ("file".equalsIgnoreCase(uri.getScheme())) {
                 path = uri.getPath();
 //                Toast.makeText(this, path + "11111", Toast.LENGTH_SHORT).show();
                 return;
@@ -157,17 +172,35 @@ public class MainActivity extends BaseActivity {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {//4.4以后
                 path = FileUtils.getPath(this, uri);
                 Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
-                loadApk(path);
+                switch (requestCode) {
+                    case 10086:
+                        loadApk(path);
+                        break;
+                    case 10010:
+                        loadImage(path);
+                        break;
+                    default:
+                        break;
+                }
             } else {//4.4以下下系统调用方法
-                path = FileUtils.getRealPathFromURI(this,uri);
+                path = FileUtils.getRealPathFromURI(this, uri);
                 Toast.makeText(MainActivity.this, path + " ", Toast.LENGTH_SHORT).show();
-                loadApk(path);
+                switch (requestCode) {
+                    case 10086:
+                        loadApk(path);
+                        break;
+                    case 10010:
+                        loadImage(path);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
 
-    private void loadApk(String path){
-        UFileUpload.getInstance().upload(new File(path), FileUtils.getContentType("apk"), new UFileUpload.UploadListener() {
+    private void loadImage(String path) {
+        UFileUpload.getInstance().upload(new File(path), ContentType.PNG, new UFileUpload.UploadListener() {
             @Override
             public void onUploading(int progress) {
                 KLog.e(progress);
@@ -180,9 +213,31 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onFailed() {
-                KLog.e("上传失败了~");
+
             }
         });
     }
+
+    private void loadApk(String path) {
+        UFileUpload.getInstance().upload(new File(path), ContentType.APK, new UFileUpload.UploadListener() {
+            @Override
+            public void onUploading(int progress) {
+                KLog.e(progress);
+
+            }
+
+            @Override
+            public void onSuccess(String onlineUri) {
+                KLog.e(onlineUri);
+
+            }
+
+            @Override
+            public void onFailed() {
+                Toast.makeText(MainActivity.this, "上传失败了~", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
 }

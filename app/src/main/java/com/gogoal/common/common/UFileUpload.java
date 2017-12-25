@@ -131,17 +131,23 @@ public class UFileUpload {
         uFileSDK.putFile(request, file, keyName, new UFileCallBack() {
             @Override
             public void onSuccess(org.json.JSONObject response) {
-                listener.onSuccess(uFileSDK.getUrl());
+                if (listener!=null) {
+                    listener.onSuccess(uFileSDK.getUrl());
+                }
             }
 
             @Override
             public void onProcess(long len) {
-                listener.onUploading((int) (len * 100 / file.length()));
+                if (listener!=null) {
+                    listener.onUploading((int) (len * 100 / file.length()));
+                }
             }
 
             @Override
             public void onFail(org.json.JSONObject response) {
-                listener.onFailed();
+                if (listener!=null) {
+                    listener.onFailed();
+                }
             }
         });
 
