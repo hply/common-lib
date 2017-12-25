@@ -40,19 +40,20 @@ public class AppManager {
      * 获取指定的Activity
      */
     public Activity getActivity(Class<?> cls) {
-        if (activityStack != null && !activityStack.isEmpty())
+        if (activityStack != null && !activityStack.isEmpty()) {
             for (Activity activity : activityStack) {
                 if (activity.getClass().equals(cls)) {
                     return activity;
                 }
             }
+        }
         return null;
     }
 
     /**
      * 添加Activity到堆栈
      */
-    void addActivity(Activity activity) {
+    public void addActivity(Activity activity) {
         activityStack.remove(activity);
         activityStack.add(activity);
     }
