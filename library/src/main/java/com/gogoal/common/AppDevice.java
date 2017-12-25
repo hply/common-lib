@@ -15,17 +15,14 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.provider.Settings;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
@@ -34,7 +31,6 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
@@ -46,7 +42,6 @@ import android.widget.Toast;
 import com.gogoal.base.BaseApp;
 
 import java.io.File;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +60,7 @@ public class AppDevice {
     private static final int NETTYPE_CMWAP = 0x02;
     private static final int NETTYPE_CMNET = 0x03;
 
-    private static Boolean _hasCamera = null;
+    private static Boolean hasCamera = null;
 
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
@@ -308,16 +303,16 @@ public class AppDevice {
 
     //相机是否可用
     public static boolean hasCamera(Context context) {
-        if (_hasCamera == null) {
+        if (hasCamera == null) {
             PackageManager pckMgr = context.getPackageManager();
             boolean flag = pckMgr
                     .hasSystemFeature("android.hardware.camera.front");
             boolean flag1 = pckMgr.hasSystemFeature("android.hardware.camera");
             boolean flag2;
             flag2 = flag || flag1;
-            _hasCamera = flag2;
+            hasCamera = flag2;
         }
-        return _hasCamera;
+        return hasCamera;
     }
 
     /**

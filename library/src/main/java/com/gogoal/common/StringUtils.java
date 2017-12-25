@@ -48,7 +48,7 @@ public class StringUtils {
     }
 
     /**
-     * 字符串全角化
+     * 字符串半角化
      */
     public static String toDBC(String input) {
         if (input != null && input.length() > 0) {
@@ -88,30 +88,6 @@ public class StringUtils {
             }
         }
         return new String(chars);
-    }
-
-    /**
-     * 简单的异或加密
-     */
-    public static String encryption(String str) {
-        StringBuilder stringBuffer = new StringBuilder();
-        for (int i = 0; i < str.length(); i++) {
-            char c = (char) (str.charAt(i) ^ 'W');
-            stringBuffer.append(c);
-        }
-        return stringBuffer.toString();
-    }
-
-    /**
-     * 对上面加密的解密
-     */
-    public static String decode(String str) {
-        StringBuilder stringBuffer = new StringBuilder();
-        for (int i = 0; i < str.length(); i++) {
-            char c = (char) (str.charAt(i) ^ 'W');
-            stringBuffer.append(c);
-        }
-        return stringBuffer.toString();
     }
 
     /**
@@ -209,36 +185,36 @@ public class StringUtils {
      * 用正则匹配身份证基本格式以及判断年月
      */
     private static boolean checkIdFormat(String idNum) {
-        if (!idNum.matches("[1-9][0-9]{16}[0-9,x,X]")) {
+        if (isActuallyEmpty(idNum) || !idNum.matches("[1-9][0-9]{16}[0-9,x,X]")) {
             return false;
         }
-        //小技巧，判断年月合法最好的办法应该就是这个了，把写的日期转成时间毫秒数，
-        //再把这个时间毫秒数转成标准的时间，如果这两个时间的字符串相同，这个时间肯定是合法的
-        String year = idNum.substring(6, 10);
-        String month = idNum.substring(10, 12);
-        String day = idNum.substring(12, 14);
+        String date = idNum.substring(6, 14);
         long time;
         try {
-            time = new SimpleDateFormat("yyyyMMdd", Locale.CHINA).parse(year + month + day).getTime();
+            time = new SimpleDateFormat("yyyyMMdd", Locale.CHINA).parse(date).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
             return false;
         }
         String newDate = new SimpleDateFormat("yyyyMMdd", Locale.CHINA).format(time);
-        return newDate.equals(year + month + day);
+        return newDate.equals(date);
     }
+
+    /**
+     * Wi系数列表
+     */
+    private final static int[] RATIO_ARR = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+
+    /**
+     * 校验码列表
+     */
+    private final static char[] CHECK_CODE_LIST = {'1', '0', 'X', '9', '8', '7', '6', '5', '4',
+            '3', '2'};
 
     /**
      * 用代码计算身份证校验位和最后一位是否相等
      */
     private static boolean checkIdValidityCode(String idNum) {
-
-        // Wi系数列表
-        final int[] ratioArr = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
-
-        // 校验码列表
-        final char[] checkCodeList = {'1', '0', 'X', '9', '8', '7', '6', '5', '4',
-                '3', '2'};
 
         // 获取身份证号字符数组
         char[] idArrs = idNum.toCharArray();
@@ -250,10 +226,10 @@ public class StringUtils {
 
         for (int i = 0; i < idArrs.length - 1; i++) {
             intIds[i] = idArrs[i] - '0';
-            idSum += intIds[i] * ratioArr[i];
+            idSum += intIds[i] * RATIO_ARR[i];
         }
 
-        return Character.toUpperCase(lastCode) == checkCodeList[idSum % 11];
+        return Character.toUpperCase(lastCode) == CHECK_CODE_LIST[idSum % 11];
     }
 
     public static CharSequence getNotNullString(String orderStr) {
@@ -364,11 +340,11 @@ public class StringUtils {
     }
 
     public static String map2Parameter(Map<String, String> map) {
-        if (map==null){
+        if (map == null) {
             return "";
         }
         StringBuilder params = new StringBuilder();
-        for (Map.Entry<String,String> entry:map.entrySet()){
+        for (Map.Entry<String, String> entry : map.entrySet()) {
             params.append("&")
                     .append(entry.getKey())
                     .append("=")

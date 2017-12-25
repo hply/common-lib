@@ -54,3 +54,27 @@
                                     isEmpty:对象是否为空或者空集
                                     appendElements：String的集合拼接成串，分号隔开
                    6) ExceptionUtils:主动抛异常
+
+                   7) ImageLoader :基于Glide图片加载的简单封装
+
+                   8) Spanny SpannableStringBuilder的封装使用
+
+                   9) SPTools SharedPreferences的封装使用，需要在Application中初始化,已在BaseApp中初始化，继承BaseApp
+
+                   10) StringUtils : 判断一个字符是否是中文            ——        isChinese(char c)
+                                     是否含有中文                      ——        isChinese(String str)
+                                     字符串去掉空格回车换行制表位      ——        replaceBlank
+                                     字符串半角化                      ——        toDBC
+                                     字符串全角化                      ——        toSBC
+                                     url进行utf-8编码                  ——        decodeUrl
+                                     字符串反转                        ——        reverseString
+                                     绝对空(空串，空String对象,null)   ——        isActuallyEmpty
+                                     输入的手机号是否合法              ——       checkPhoneString
+                                     输入的邮箱格式是否合法            ——       checkEmail
+                                     输入的身份证号码是否合法          ——          checkIdentity
+                                     获取非空字符串                    ——        getNotNullString
+                                     获取Double                        ——        parseStringDouble
+                                     随机数                            ——        getRandomString
+
+                    11)
+

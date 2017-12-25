@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 
 import com.gogoal.common.AppDevice;
+import com.gogoal.common.SPTools;
 
 /**
  * @author wangjd on 2017/12/19 13:10.
@@ -23,6 +24,9 @@ public class BaseApp extends Application {
         super.onCreate();
         app = this;
         getDeviceInfo(this);
+        if (!SPTools.isSpInited()){
+            SPTools.initSharedPreferences(this);
+        }
     }
 
     /*获取设备信息*/
