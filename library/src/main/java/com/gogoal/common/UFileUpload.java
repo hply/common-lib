@@ -1,4 +1,4 @@
-package com.gogoal.common.common;
+package com.gogoal.common;
 
 import android.util.Base64;
 
@@ -11,14 +11,23 @@ import cn.iyuxuan.library.uFileLib.UFileUtils;
 
 /**
  * /**
+ *
  * @author wangjd on 2017/2/13 0013.
- * Staff_id 1375
- * phone 18930640263
- * <p>
- * ufile上传的封装——半成品
+ *         Staff_id 1375
+ *         phone 18930640263
+ *         <p>
+ *         ufile上传的封装——半成品
  */
 
 public class UFileUpload {
+
+    private static String PRIVATE_KEY;
+    private static String PUBLIC_KEY;
+
+    public static void init(String privateKey, String publicKey) {
+        PRIVATE_KEY = privateKey;
+        PUBLIC_KEY = publicKey;
+    }
 
     private static final String BUCKET = "hackfile";
 
@@ -54,61 +63,12 @@ public class UFileUpload {
         void onFailed();
     }
 
-    /**
-     * 枚举上传四中类型
-     */
-    public enum Type {
-        /**
-         * 图片
-         */
-        IMAGE(0),
-
-        /**
-         * 音频
-         */
-        AUDIO(1),
-
-        /**
-         * 视频
-         */
-        VIDEO(2),
-
-        /**
-         * 其他文件
-         */
-        FILE(4);
-
-        int type;
-
-        Type(int type) {
-            this.type = type;
-        }
-
-    }
-
-    public void upload(final File file, Type type, final UploadListener listener) {
-        String contentType = null;
-        switch (type) {
-            case IMAGE:
-                contentType = ImageUtils.getImageType(file);
-                break;
-            case AUDIO:
-                contentType = "audio/amr";
-                break;
-            case VIDEO:
-                contentType = "video/mpeg4";
-                break;
-            case FILE:
-                contentType = "application/octet-stream";
-                break;
-            default:
-                break;
-        }
-
-        upload(file, contentType, listener);
-
-    }
     public void upload(final File file, String contentType, final UploadListener listener) {
+        String fileName = file.getName();
+        upload(file, contentType, fileName, listener);
+    }
+
+    public void upload(final File file, String contentType, String name, final UploadListener listener) {
 
         String httpMethod = "PUT";
 
@@ -116,9 +76,10 @@ public class UFileUpload {
 
         String date = "";
 
-        String keyName = "gogoal" + File.separator + "avatar" + File.separator + "ucloud_" +
-                MD5Utils.getMD5EncryptyString16(file.getPath()) +
-                file.getPath().substring(file.getPath().lastIndexOf('.'));
+        //上传文件的最终保存的名字
+        String keyName = "gogoal" + File.separator +
+                FileUtils.getFileExtension(file) + File.separator +
+                name;
 
         String authorization = getAuthorization(httpMethod, contentMD5, contentType, date, BUCKET, keyName);
         final UFileRequest request = new UFileRequest();
@@ -131,21 +92,21 @@ public class UFileUpload {
         uFileSDK.putFile(request, file, keyName, new UFileCallBack() {
             @Override
             public void onSuccess(org.json.JSONObject response) {
-                if (listener!=null) {
+                if (listener != null) {
                     listener.onSuccess(uFileSDK.getUrl());
                 }
             }
 
             @Override
             public void onProcess(long len) {
-                if (listener!=null) {
+                if (listener != null) {
                     listener.onUploading((int) (len * 100 / file.length()));
                 }
             }
 
             @Override
             public void onFail(org.json.JSONObject response) {
-                if (listener!=null) {
+                if (listener != null) {
                     listener.onFailed();
                 }
             }
@@ -153,27 +114,22 @@ public class UFileUpload {
 
     }
 
-//    private String decode(String separator) {
-//        try {
-//            return URLDecoder.decode(separator, "utf-8");
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-//        return "/";
-//    }
-
     /**
      * UCloud签名
      */
     private String getAuthorization(String httpMethod, String contentMD5, String contentType, String date, String bucket, String key) {
+        if (PRIVATE_KEY == null || PUBLIC_KEY == null) {
+            throw new IllegalArgumentException("请在项目的Application中初始化UFileUpload，" +
+                    "调用UFileUpload.init(pri,pub)配置私钥和公钥");
+        }
         String signature = "";
         try {
             String strToSign = httpMethod + "\n" + contentMD5 + "\n" + contentType + "\n" + date + "\n" + "/" + bucket + "/" + key;
-            byte[] hmac = UFileUtils.hmacSha1(AppConst.PRIVATE_KEY, strToSign);
+            byte[] hmac = UFileUtils.hmacSha1(PRIVATE_KEY, strToSign);
             signature = Base64.encodeToString(hmac, Base64.DEFAULT);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "UCloud" + " " + AppConst.PUBLIC_KEY + ":" + signature;
+        return "UCloud" + " " + PUBLIC_KEY + ":" + signature;
     }
 }

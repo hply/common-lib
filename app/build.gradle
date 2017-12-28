@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        zhiTouConfig {
+            keyAlias 'go_goal_alias'
+            keyPassword 'zyyx.123'
+            storeFile file('E:/zyyx/go-goal-release-key.jks')
+            storePassword 'zyyx.123'
+        }
+    }
+
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.gogoal.common"
@@ -12,8 +21,24 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            signingConfig signingConfigs.zhiTouConfig
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            jniDebuggable false
+            minifyEnabled true
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+        }
+
+        debug {
+            signingConfig signingConfigs.zhiTouConfig
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
+            jniDebuggable true
+            zipAlignEnabled true
+            minifyEnabled true
+            shrinkResources true
         }
     }
     configurations.all {
@@ -37,7 +62,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation project(':library')
 
+    compile 'com.google.code.gson:gson:2.8.2'
     //日志打印
     implementation 'com.github.zhaokaiqiang.klog:library:1.6.0'
-
+//    compile 'com.xw.repo:bubbleseekbar:3.12-lite'
 }

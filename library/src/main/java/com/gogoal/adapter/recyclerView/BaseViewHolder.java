@@ -8,11 +8,13 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.util.Linkify;
@@ -24,8 +26,6 @@ import android.widget.AdapterView;
 import android.widget.Checkable;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -55,11 +55,6 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     private final LinkedHashSet<Integer> itemChildLongClickViewIds;
     private BaseCommonAdapter adapter;
-    /**
-     * use itemView instead
-     */
-    @Deprecated
-    public View convertView;
 
     /**
      * Package private field to retain the associated user object and detect a change
@@ -73,9 +68,6 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         this.childClickViewIds = new LinkedHashSet<>();
         this.itemChildLongClickViewIds = new LinkedHashSet<>();
         this.nestViews = new HashSet<>();
-        convertView = view;
-
-
     }
 
     private int getClickPosition() {
@@ -91,17 +83,6 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     public HashSet<Integer> getChildClickViewIds() {
         return childClickViewIds;
-    }
-
-    /**
-     * use itemView instead
-     *
-     * @return the ViewHolder root view
-     */
-    @Deprecated
-    public View getConvertView() {
-
-        return convertView;
     }
 
     /**
@@ -194,6 +175,19 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     public BaseViewHolder setTextColor(@IdRes int viewId, @ColorInt int textColor) {
         TextView view = getView(viewId);
         view.setTextColor(textColor);
+        return this;
+    }
+
+    /**
+     * Will set text color of a TextView.
+     *
+     * @param viewId    The view id.
+     * @param colorRes The text color (not a resource id).
+     * @return The BaseViewHolder for chaining.
+     */
+    public BaseViewHolder setTextResColor(@IdRes int viewId, @ColorRes int colorRes) {
+        TextView view = getView(viewId);
+        view.setTextColor(ContextCompat.getColor(itemView.getContext(),colorRes));
         return this;
     }
 
@@ -298,76 +292,8 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     /**
-     * Sets the progress of a ProgressBar.
-     *
-     * @param viewId   The view id.
-     * @param progress The progress.
-     * @return The BaseViewHolder for chaining.
-     */
-    public BaseViewHolder setProgress(@IdRes int viewId, int progress) {
-        ProgressBar view = getView(viewId);
-        view.setProgress(progress);
-        return this;
-    }
-
-    /**
-     * Sets the progress and max of a ProgressBar.
-     *
-     * @param viewId   The view id.
-     * @param progress The progress.
-     * @param max      The max value of a ProgressBar.
-     * @return The BaseViewHolder for chaining.
-     */
-    public BaseViewHolder setProgress(@IdRes int viewId, int progress, int max) {
-        ProgressBar view = getView(viewId);
-        view.setMax(max);
-        view.setProgress(progress);
-        return this;
-    }
-
-    /**
-     * Sets the range of a ProgressBar to 0...max.
-     *
-     * @param viewId The view id.
-     * @param max    The max value of a ProgressBar.
-     * @return The BaseViewHolder for chaining.
-     */
-    public BaseViewHolder setMax(@IdRes int viewId, int max) {
-        ProgressBar view = getView(viewId);
-        view.setMax(max);
-        return this;
-    }
-
-    /**
-     * Sets the rating (the number of stars filled) of a RatingBar.
-     *
-     * @param viewId The view id.
-     * @param rating The rating.
-     * @return The BaseViewHolder for chaining.
-     */
-    public BaseViewHolder setRating(@IdRes int viewId, float rating) {
-        RatingBar view = getView(viewId);
-        view.setRating(rating);
-        return this;
-    }
-
-    /**
-     * Sets the rating (the number of stars filled) and max of a RatingBar.
-     *
-     * @param viewId The view id.
-     * @param rating The rating.
-     * @param max    The range of the RatingBar to 0...max.
-     * @return The BaseViewHolder for chaining.
-     */
-    public BaseViewHolder setRating(@IdRes int viewId, float rating, int max) {
-        RatingBar view = getView(viewId);
-        view.setMax(max);
-        view.setRating(rating);
-        return this;
-    }
-
-    /**
      * Sets the on click listener of the view.
+     * 解耦适配器与点击事件
      *
      * @param viewId   The view id.
      * @param listener The on click listener;
@@ -389,7 +315,6 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
      * <p>
      * or if you can use  recyclerView.addOnItemTouch(listerer)  wo also support this menthod
      */
-    @SuppressWarnings("unchecked")
     public BaseViewHolder addOnClickListener(@IdRes final int viewId) {
         childClickViewIds.add(viewId);
         final View view = getView(viewId);

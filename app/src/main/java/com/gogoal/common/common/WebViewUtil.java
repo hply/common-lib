@@ -1,12 +1,6 @@
 package com.gogoal.common.common;
 
 import android.content.Context;
-import android.webkit.JavascriptInterface;
-
-import com.gogoal.common.R;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,24 +21,6 @@ public class WebViewUtil {
 
     public WebViewUtil(Context mContext) {
         this.mContext = mContext;
-    }
-
-    @JavascriptInterface
-    public String getToken() {
-        try {
-            JSONObject object = new JSONObject(getUserInfo());
-            return object.getString("token");
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
-    //添加让web获取用户信息
-    @JavascriptInterface
-    public String getUserInfo() {
-//        mContext.getResources().openRawResource(R.raw.)
-        return getRawString(R.raw.userinfo);
     }
 
     /**

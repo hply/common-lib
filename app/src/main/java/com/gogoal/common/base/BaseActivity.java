@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.gogoal.base.AppManager;
 import com.gogoal.common.common.IPermissionListner;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBase {
     }
 
     //封装运行时权限
-    public static void requestRuntimePermission(IPermissionListner listener,String... permissions) {
+    public static void requestRuntimePermission(IPermissionListner listener, String... permissions) {
         mListener = listener;
         List<String> permissionList = new ArrayList<>();
 

@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.gogoal.common.R;
 import com.gogoal.common.base.BaseActivity;
 import com.gogoal.common.common.WebViewUtil;
-import com.socks.library.KLog;
 
 import cn.iyuxuan.library.jsbridge.BridgeHandler;
 import cn.iyuxuan.library.jsbridge.BridgeWebView;
@@ -90,7 +89,6 @@ public class JSBridgeActivity extends BaseActivity {
 
         String ua = mWebView.getSettings().getUserAgentString() + "GoGoaler-invest/v1.1.4";
         //Mozilla/5.0 (Linux; Android 7.1.1; MI MAX 2 Build/NMF26F; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/61.0.3163.98 Mobile Safari/537.36GoGoaler-invest/v1.1.4
-        KLog.e(ua);
 
         mWebView.getSettings().setUserAgentString(ua);
 

@@ -72,7 +72,7 @@ public class AppManager {
         return activityStack.get(activityStack.size() - 1);
     }
 
-    private void removeActivity(Activity activity) {
+    public void removeActivity(Activity activity) {
         if (activity != null && activityStack.contains(activity)) {
             activityStack.remove(activity);
         }

@@ -8,57 +8,70 @@
     android:padding="15dp"
     tools:context=".activity.MainActivity">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <Button
             android:id="@+id/btn_dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="DialogFragment" />
-
-        <Button
-            android:id="@+id/btn_js_bridge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="测试JSBridge" />
-
-        <cn.iyuxuan.library.roundImage.RoundedImageView
-            android:id="@+id/riv"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:src="@mipmap/ic_launcher"
-            android:text="测试roundImageViw"
-            app:riv_border_color="#f00"
-            app:riv_border_width="2dp"
-            app:riv_oval="true" />
-
-        <Button
-            android:id="@+id/btn_ufile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="UFile Demo" />
+            android:text="DialogFragment"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btn_load_gallery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="LoadGallery" />
+            android:text="LoadGallery"
+            app:layout_constraintTop_toBottomOf="@+id/btn_dialog" />
 
         <Button
             android:id="@+id/btn_apk"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="apk上传" />
+            android:text="apk上传"
+            app:layout_constraintTop_toBottomOf="@+id/btn_load_gallery" />
 
         <Button
             android:id="@+id/btn_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="图片上传"
+            app:layout_constraintTop_toBottomOf="@+id/btn_apk" />
+
+        <com.gogoal.common.view.SeekBar
+            android:id="@+id/seek_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_image" />
+
+        <TextView
+            android:id="@+id/tv_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="图片上传" />
+            android:text="0/100"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/text_18sp"
+            android:visibility="gone"
+            app:layout_constraintRight_toRightOf="@+id/seek_bar"
+            app:layout_constraintTop_toBottomOf="@+id/seek_bar" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tv_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="上传中..."
+            android:textColor="@color/colorAccent"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/seek_bar" />
+
+    </android.support.constraint.ConstraintLayout>
 </ScrollView>

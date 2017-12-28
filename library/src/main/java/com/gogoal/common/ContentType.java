@@ -1,11 +1,15 @@
-package com.gogoal.common.common;
+package com.gogoal.common;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
 
 /**
  * @author wangjd on 2017/12/25 10:40.
  * @description :常用"文件扩展名—MIME类型"匹配表。
  */
 public class ContentType {
-    public static final String _3GP ="video/3gpp";
+    public static final String _3GP = "video/3gpp";
     public static final String AAB = "application/x-authoware-bin";
     public static final String AAM = "application/x-authoware-map";
     public static final String AAS = "application/x-authoware-seg";
@@ -198,7 +202,7 @@ public class ContentType {
     public static final String NDWN = "application/ndwn";
     public static final String NIF = "application/x-nif";
     public static final String NMZ = "application/x-scream";
-    public static final String NOKIA_OP_LOGO ="image/vnd.nok-oplogo-color";
+    public static final String NOKIA_OP_LOGO = "image/vnd.nok-oplogo-color";
     public static final String NPX = "application/x-netfpx";
     public static final String NSND = "audio/nsnd";
     public static final String NVA = "application/x-neva1";
@@ -383,7 +387,7 @@ public class ContentType {
     public static final String WV = "video/wavelet";
     public static final String WVX = "video/x-ms-wvx";
     public static final String WXL = "application/x-wxl";
-    public static final String X_GZIP ="application/x-gzip";
+    public static final String X_GZIP = "application/x-gzip";
     public static final String XAR = "application/vnd.xara";
     public static final String XBM = "image/x-xbitmap";
     public static final String XDM = "application/x-xdma";
@@ -413,4 +417,35 @@ public class ContentType {
     public static final String Z = "application/x-compress";
     public static final String ZAC = "application/x-zaurus-zac";
     public static final String ZIP = "application/zip";
+
+    /***/
+    public static String getContenrType(String fileType) {
+        fileType = fileType.toUpperCase();
+//        String rawString = UIHelper.getRawString(R.raw.content_type);
+//        try {
+//            JSONObject object = new JSONObject(rawString);
+//            return object.getString(fileType);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+        try {
+            Class<?> clzz = ContentType.class;
+            Field[] fields = clzz.getDeclaredFields();
+
+            HashMap<String, String> typeMap = new HashMap<>();
+            for (int i = 0; fields != null && i < fields.length; i++) {
+                //成员变量描述符
+                String modifier = Modifier.toString(fields[i].getModifiers());
+                //获取所有final修饰的变量
+                if (modifier != null && modifier.contains("final")) {
+                    String fieldName = fields[i].getName();
+                    typeMap.put(fieldName.toUpperCase(), (String) fields[i].get(fieldName));
+                }
+            }
+            return typeMap.get(fileType);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
