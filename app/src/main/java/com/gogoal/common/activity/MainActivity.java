@@ -19,12 +19,10 @@ import com.gogoal.common.FileUtils;
 import com.gogoal.common.OnItemClickListener;
 import com.gogoal.common.R;
 import com.gogoal.common.UFileUpload;
-import com.gogoal.common.UIHelper;
 import com.gogoal.common.base.BaseActivity;
 import com.gogoal.common.common.IPermissionListner;
 import com.gogoal.common.view.SeekBar;
 import com.gogoal.dialog.BottomGridDialog;
-import com.socks.library.KLog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -66,12 +64,6 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btn_apk).setOnClickListener(new DemoClick(true));
         findViewById(R.id.btn_image).setOnClickListener(new DemoClick(true));
         findViewById(R.id.btn_load_gallery).setOnClickListener(new DemoClick(false));
-
-        long time = System.currentTimeMillis();
-        KLog.e(ContentType.getContenrType("XpI"));
-        KLog.e(System.currentTimeMillis() - time);
-        String addressJson = UIHelper.getRawString(R.raw.address);
-
     }
 
     private class DemoClick implements View.OnClickListener {
@@ -216,7 +208,7 @@ public class MainActivity extends BaseActivity {
                         .setPositiveButton("重试", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                findViewById(R.id.btn_apk).performClick();
+                                findViewById(R.id.btn_image).performClick();
                             }
                         }).setNegativeButton("取消", null)
                         .setCancelable(false);
