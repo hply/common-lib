@@ -1,15 +1,6 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        zhiTouConfig {
-            keyAlias 'go_goal_alias'
-            keyPassword 'zyyx.123'
-            storeFile file('E:/zyyx/go-goal-release-key.jks')
-            storePassword 'zyyx.123'
-        }
-    }
-
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.gogoal.common"
@@ -21,7 +12,7 @@ android {
     }
     buildTypes {
         release {
-            signingConfig signingConfigs.zhiTouConfig
+//            signingConfig signingConfigs.zhiTouConfig
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable false
             jniDebuggable false
@@ -32,7 +23,7 @@ android {
         }
 
         debug {
-            signingConfig signingConfigs.zhiTouConfig
+//            signingConfig signingConfigs.zhiTouConfig
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable true
             jniDebuggable true
