@@ -34,12 +34,7 @@
 
         <activity android:name=".activity.JSBridgeActivity"/>
 
-        <activity
-            android:name=".activity.TakePhotoActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".activity.DemoActivity"/>
 
     </application>
 

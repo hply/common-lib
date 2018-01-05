@@ -12,6 +12,8 @@ import android.provider.MediaStore;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -295,11 +297,36 @@ public class FileUtils {
             cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
                     null);
             if (cursor != null && cursor.moveToFirst()) {
-                final int column_index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(column_index);
+                return cursor.getString(cursor.getColumnIndexOrThrow(column));
             }
-        } finally {
+        } catch (Exception e){
+            return null;
+        }finally {
+            if (cursor!=null) {
+                cursor.close();
+            }
         }
         return null;
+    }
+
+    /**
+     * 文件复制.
+     */
+    public static boolean copy(String srcFile, String destFile) {
+        try {
+            FileInputStream in = new FileInputStream(srcFile);
+            FileOutputStream out = new FileOutputStream(destFile);
+            byte[] bytes = new byte[1024];
+            int c;
+            while ((c = in.read(bytes)) != -1) {
+                out.write(bytes, 0, c);
+            }
+            in.close();
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }
