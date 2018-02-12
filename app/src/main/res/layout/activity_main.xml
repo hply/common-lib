@@ -35,11 +35,39 @@
             app:layout_constraintTop_toBottomOf="@+id/btn_load_gallery" />
 
         <Button
+            android:id="@+id/btn_upload_gogoal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="上传GoGoal App"
+            app:layout_constraintTop_toBottomOf="@+id/btn_apk"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/btn_upload_zhitou" />
+
+        <Button
+            android:id="@+id/btn_upload_zhitou"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="上传智投App"
+            app:layout_constraintTop_toTopOf="@+id/btn_upload_gogoal"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_upload_gogoal"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toRightOf="@+id/btn_upload_gogoal"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <Button
             android:id="@+id/btn_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="图片上传"
-            app:layout_constraintTop_toBottomOf="@+id/btn_apk" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_upload_gogoal" />
+
+        <Button
+            android:id="@+id/btn_image_null"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="无后缀图片上传"
+            app:layout_constraintTop_toBottomOf="@+id/btn_image" />
 
         <com.gogoal.common.view.SeekBar
             android:id="@+id/seek_bar"
@@ -49,7 +77,7 @@
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_image" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_image_null" />
 
         <TextView
             android:id="@+id/tv_progress"

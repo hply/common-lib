@@ -65,7 +65,7 @@ public class UFileUpload {
 
     public void upload(final File file, String contentType, final UploadListener listener) {
         String fileName = file.getName();
-        upload(file, contentType, fileName, listener);
+        upload(file, ContentType.getContenrType(FileUtils.getFileType(file)), fileName, listener);
     }
 
     public void upload(final File file, String contentType, String name, final UploadListener listener) {
@@ -77,11 +77,14 @@ public class UFileUpload {
         String date = "";
 
         //上传文件的最终保存的名字
-        String keyName = "gogoal" + File.separator +
-                FileUtils.getFileExtension(file) + File.separator +
+        String keyName = "gogoal" +
+                File.separator +
+                FileUtils.getFileExtension(file) +
+                File.separator +
                 name;
 
         String authorization = getAuthorization(httpMethod, contentMD5, contentType, date, BUCKET, keyName);
+
         final UFileRequest request = new UFileRequest();
         request.setHttpMethod(httpMethod);
         request.setAuthorization(authorization);
@@ -90,6 +93,69 @@ public class UFileUpload {
 
 //        http://hackfile.ufile.ucloud.com.cn
         uFileSDK.putFile(request, file, keyName, new UFileCallBack() {
+            @Override
+            public void onSuccess(org.json.JSONObject response) {
+                if (listener != null) {
+                    listener.onSuccess(uFileSDK.getUrl());
+                }
+            }
+
+            @Override
+            public void onProcess(long len) {
+                if (listener != null) {
+                    listener.onUploading((int) (len * 100 / file.length()));
+                }
+            }
+
+            @Override
+            public void onFail(org.json.JSONObject response) {
+                if (listener != null) {
+                    listener.onFailed();
+                }
+            }
+        });
+
+    }
+
+    public enum Zyyx {
+        GOGOAL("gogoal.apk"),
+        ZhiTou("zhitou.apk");
+        private String name;
+
+        Zyyx(String name) {
+            this.name = name;
+        }
+    }
+
+    public void upload(final File file, Zyyx type, final UploadListener listener) {
+
+        String httpMethod = "PUT";
+
+        String contentType = "application/vnd.android.package-archive";
+
+        String name = type == Zyyx.GOGOAL ? Zyyx.GOGOAL.name : Zyyx.ZhiTou.name;
+
+        String contentMD5 = UFileUtils.getFileMD5(file);
+
+        String date = "";
+
+        //上传文件的最终保存的名字
+
+        String authorization = getAuthorization(httpMethod,
+                contentMD5,
+                contentType,
+                date,
+                BUCKET,
+                name);
+
+        final UFileRequest request = new UFileRequest();
+        request.setHttpMethod(httpMethod);
+        request.setAuthorization(authorization);
+        request.setContentMD5(contentMD5);
+        request.setContentType(contentType);
+
+//        http://hackfile.ufile.ucloud.com.cn
+        uFileSDK.putFile(request, file, name, new UFileCallBack() {
             @Override
             public void onSuccess(org.json.JSONObject response) {
                 if (listener != null) {

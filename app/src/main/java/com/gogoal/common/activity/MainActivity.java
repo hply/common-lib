@@ -17,6 +17,7 @@ import com.gogoal.common.AppDevice;
 import com.gogoal.common.ContentType;
 import com.gogoal.common.FileUtils;
 import com.gogoal.common.OnItemClickListener;
+import com.gogoal.common.PathUtils;
 import com.gogoal.common.R;
 import com.gogoal.common.UFileUpload;
 import com.gogoal.common.base.BaseActivity;
@@ -63,7 +64,10 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btn_dialog).setOnClickListener(new DemoClick(false));
         findViewById(R.id.btn_apk).setOnClickListener(new DemoClick(true));
         findViewById(R.id.btn_image).setOnClickListener(new DemoClick(true));
+        findViewById(R.id.btn_image_null).setOnClickListener(new DemoClick(true));
         findViewById(R.id.btn_load_gallery).setOnClickListener(new DemoClick(false));
+        findViewById(R.id.btn_upload_gogoal).setOnClickListener(new DemoClick(true));
+        findViewById(R.id.btn_upload_zhitou).setOnClickListener(new DemoClick(true));
     }
 
     private class DemoClick implements View.OnClickListener {
@@ -88,11 +92,29 @@ public class MainActivity extends BaseActivity {
                                 apkIntent.addCategory(Intent.CATEGORY_OPENABLE);
                                 startActivityForResult(apkIntent, 10086);
                                 break;
+                            case R.id.btn_upload_gogoal:
+                                Intent gogoalIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                                gogoalIntent.setType(ContentType.APK);
+                                gogoalIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                                startActivityForResult(gogoalIntent, 147);
+                                break;
+                            case R.id.btn_upload_zhitou:
+                                Intent zhitouIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                                zhitouIntent.setType(ContentType.APK);
+                                zhitouIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                                startActivityForResult(zhitouIntent, 258);
+                                break;
                             case R.id.btn_image:
                                 Intent imgIntent = new Intent(Intent.ACTION_GET_CONTENT);
                                 imgIntent.setType(ContentType.PNG);
                                 imgIntent.addCategory(Intent.CATEGORY_OPENABLE);
                                 startActivityForResult(imgIntent, 10010);
+                                break;
+                            case R.id.btn_image_null:
+                                Intent nullImgIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//                                nullImgIntent.setType();
+                                nullImgIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                                startActivityForResult(nullImgIntent, 10011);
                                 break;
                             default:
                                 break;
@@ -143,16 +165,7 @@ public class MainActivity extends BaseActivity {
                 return;
             }
             //使用第三方应用打开
-            String path;
-            if ("file".equalsIgnoreCase(uri.getScheme())) {
-                return;
-            }
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {//4.4以后
-                path = FileUtils.getPath(this, uri);
-
-            } else {//4.4以下下系统调用方法
-                path = FileUtils.getRealPathFromURI(this, uri);
-            }
+            String path = PathUtils.getPath(this, uri);
             Toast.makeText(MainActivity.this, path + " ", Toast.LENGTH_SHORT).show();
             switch (requestCode) {
                 case 10086:
@@ -160,6 +173,15 @@ public class MainActivity extends BaseActivity {
                     break;
                 case 10010:
                     loadImage(path);
+                    break;
+                case 10011:
+                    loadImage(path);
+                    break;
+                case 147:
+                    loadZyyxProject(path, UFileUpload.Zyyx.GOGOAL);
+                    break;
+                case 258:
+                    loadZyyxProject(path, UFileUpload.Zyyx.ZhiTou);
                     break;
                 default:
                     break;
@@ -169,7 +191,7 @@ public class MainActivity extends BaseActivity {
 
     //上传图片
     private void loadImage(String path) {
-        UFileUpload.getInstance().upload(new File(path), ContentType.PNG, new UFileUpload.UploadListener() {
+        UFileUpload.getInstance().upload(new File(path),FileUtils.getFileExtension(new File(path)), new UFileUpload.UploadListener() {
             @Override
             public void onUploading(int progress) {
                 mSeekBar.setProgress(progress);
@@ -183,18 +205,8 @@ public class MainActivity extends BaseActivity {
             public void onSuccess(final String onlineUri) {
                 textFlag.setText("已上传");
                 Toast.makeText(MainActivity.this, "上传成功!", Toast.LENGTH_SHORT).show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("上传成功")
-                        .setMessage(onlineUri)
-                        .setPositiveButton("复制URl", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                AppDevice.copyTextToBoard(MainActivity.this, onlineUri);
-                            }
-                        }).setNegativeButton("取消", null)
-                        .setCancelable(false);
                 if (!isFinishing()) {
-                    builder.show();
+                    dialogUrl(onlineUri).show();
                 }
             }
 
@@ -235,18 +247,8 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onSuccess(final String onlineUri) {
                 Toast.makeText(MainActivity.this, "上传成功!", Toast.LENGTH_SHORT).show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("上传成功")
-                        .setMessage(onlineUri)
-                        .setPositiveButton("复制URl", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                AppDevice.copyTextToBoard(MainActivity.this, onlineUri);
-                            }
-                        }).setNegativeButton("取消", null)
-                        .setCancelable(false);
                 if (!isFinishing()) {
-                    builder.show();
+                    dialogUrl(onlineUri).show();
                 }
                 textFlag.setText("已上传");
 
@@ -273,4 +275,42 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    private AlertDialog.Builder dialogUrl(final String onlineUri) {
+        return new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("上传成功")
+                            .setMessage(onlineUri)
+                            .setPositiveButton("复制URl", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    AppDevice.copyTextToBoard(MainActivity.this, onlineUri);
+                                }
+                            }).setNegativeButton("取消", null)
+                            .setCancelable(false);
+    }
+
+    public final void loadZyyxProject(String path,UFileUpload.Zyyx type){
+        UFileUpload.getInstance().upload(new File(path), type, new UFileUpload.UploadListener() {
+            @Override
+            public void onUploading(int progress) {
+                mSeekBar.setProgress(progress);
+                textProgress.setText(progress + "/100");
+                if (progress == 100) {
+                    textFlag.setText("分片合并中，请稍后...");
+                }
+            }
+
+            @Override
+            public void onSuccess(String onlineUri) {
+                if (!isFinishing()) {
+                    dialogUrl(onlineUri).show();
+                }
+                textFlag.setText("已上传");
+            }
+
+            @Override
+            public void onFailed() {
+                Toast.makeText(MainActivity.this, "上传失败了", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

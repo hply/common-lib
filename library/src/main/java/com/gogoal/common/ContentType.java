@@ -1,5 +1,7 @@
 package com.gogoal.common;
 
+import android.util.ArrayMap;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -363,6 +365,7 @@ public class ContentType {
     public static final String WAX = "audio/x-ms-wax";
     public static final String WBMP = "image/vnd.wap.wbmp";
     public static final String WEB = "application/vnd.xara";
+    public static final String WEBP = "image/webp";
     public static final String WI = "image/wavelet";
     public static final String WIS = "application/x-InstallShield";
     public static final String WM = "video/x-ms-wm";
@@ -418,6 +421,8 @@ public class ContentType {
     public static final String ZAC = "application/x-zaurus-zac";
     public static final String ZIP = "application/zip";
 
+    public static final String NULL = "application/octet-stream";
+
     /***/
     public static String getContenrType(String fileType) {
         fileType = fileType.toUpperCase();
@@ -433,7 +438,7 @@ public class ContentType {
             Class<?> clzz = ContentType.class;
             Field[] fields = clzz.getDeclaredFields();
 
-            HashMap<String, String> typeMap = new HashMap<>();
+            ArrayMap<String, String> typeMap = new ArrayMap<>();
             for (int i = 0; fields != null && i < fields.length; i++) {
                 //成员变量描述符
                 String modifier = Modifier.toString(fields[i].getModifiers());
